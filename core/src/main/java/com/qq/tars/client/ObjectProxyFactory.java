@@ -54,9 +54,9 @@ class ObjectProxyFactory {
             servantProxyConfig.setCommunicatorId(communicator.getId());
             servantProxyConfig.setModuleName(communicator.getCommunicatorConfig().getModuleName(), communicator.getCommunicatorConfig().isEnableSet(), communicator.getCommunicatorConfig().getSetDivision());
             servantProxyConfig.setLocator(communicator.getCommunicatorConfig().getLocator());
-            if (StringUtils.isNotEmpty(setDivision)) {
-                servantProxyConfig.setSetDivision(setDivision);
-            }
+            addSetDivisionInfo(servantProxyConfig, setDivision);
+            servantProxyConfig.setRefreshInterval(communicator.getCommunicatorConfig().getRefreshEndpointInterval());
+            servantProxyConfig.setReportInterval(communicator.getCommunicatorConfig().getReportInterval());
         }
 
         updateServantEndpoints(servantProxyConfig);
@@ -114,16 +114,25 @@ class ObjectProxyFactory {
         ServantProxyConfig cfg = new ServantProxyConfig(communicator.getId(), communicatorConfig.getLocator(), objName);
         cfg.setAsyncTimeout(communicatorConfig.getAsyncInvokeTimeout());
         cfg.setSyncTimeout(communicatorConfig.getSyncInvokeTimeout());
-
-        if (StringUtils.isNotEmpty(setDivision)) {
-            cfg.setSetDivision(setDivision);
-        }
-
+        addSetDivisionInfo(cfg, setDivision);
         cfg.setModuleName(communicatorConfig.getModuleName(), communicatorConfig.isEnableSet(), communicatorConfig.getSetDivision());
         cfg.setStat(communicatorConfig.getStat());
         cfg.setCharsetName(communicatorConfig.getCharsetName());
         cfg.setConnections(communicatorConfig.getConnections());
+        cfg.setRefreshInterval(communicatorConfig.getRefreshEndpointInterval());
+        cfg.setReportInterval(communicator.getCommunicatorConfig().getReportInterval());
         return cfg;
+    }
+
+    public void addSetDivisionInfo(ServantProxyConfig cfg, String setDivision) {
+        CommunicatorConfig communicatorConfig = communicator.getCommunicatorConfig();
+        if (StringUtils.isNotEmpty(communicatorConfig.getSetDivision()) && communicatorConfig.isEnableSet()) {
+            cfg.setSetDivision(communicatorConfig.getSetDivision());
+        }
+        //Custom priority
+        if (StringUtils.isNotEmpty(setDivision)) {
+            cfg.setSetDivision(setDivision);
+        }
     }
 
     private void updateServantEndpoints(ServantProxyConfig cfg) {

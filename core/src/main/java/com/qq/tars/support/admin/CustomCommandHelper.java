@@ -19,28 +19,28 @@ package com.qq.tars.support.admin;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class CustemCommandHelper {
+public final class CustomCommandHelper {
 
-    private static final CustemCommandHelper Instance = new CustemCommandHelper();
+    private static final CustomCommandHelper Instance = new CustomCommandHelper();
 
-    private Map<String, CommandHandler> custemHandlerMap = new ConcurrentHashMap<String, CommandHandler>();
+    private Map<String, CommandHandler> customHandlerMap = new ConcurrentHashMap<String, CommandHandler>();
 
-    private CustemCommandHelper() {
+    private CustomCommandHelper() {
     }
 
-    public static CustemCommandHelper getInstance() {
+    public static CustomCommandHelper getInstance() {
         return Instance;
     }
 
-    public boolean registerCustemHandler(String cmdName, CommandHandler handler) {
+    public boolean registerCustomHandler(String cmdName, CommandHandler handler) {
         if (com.qq.tars.common.util.StringUtils.isEmpty(cmdName) || handler == null) {
             return false;
         }
-        custemHandlerMap.put(cmdName, handler);
+        customHandlerMap.put(cmdName, handler);
         return true;
     }
 
     public CommandHandler getCommandHandler(String cmdName) {
-        return custemHandlerMap.get(cmdName);
+        return customHandlerMap.get(cmdName);
     }
 }

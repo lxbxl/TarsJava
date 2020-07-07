@@ -148,13 +148,13 @@ public class ServantClient {
             }
             return response;
         } catch (InterruptedException e) {
-            logger.error(e.getLocalizedMessage());
+            logger.error(e.getMessage());
+            throw new IOException(e.getMessage());
         } finally {
             if (ticket != null) {
                 TicketManager.removeTicket(ticket.getTicketNumber());
             }
         }
-        return response;
     }
 
     public <T extends ServantResponse> void invokeWithAsync(ServantRequest request, Callback<T> callback) throws IOException {
@@ -180,7 +180,7 @@ public class ServantClient {
         try {
             ensureConnected();
             request.setInvokeStatus(InvokeStatus.FUTURE_CALL);
-            ticket = TicketManager.createTicket(request, session, this.syncTimeout, callback);
+            ticket = TicketManager.createTicket(request, session, this.asyncTimeout, callback, selectorManager);
 
             Session current = session;
             current.write(request);
